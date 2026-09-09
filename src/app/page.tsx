@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { Navbar } from '@/components/Navbar';
 import { HeroSection } from '@/components/HeroSection';
+import { FeaturedCollection } from '@/components/FeaturedCollection';
 import { QuickCartDrawer } from '@/components/QuickCartDrawer';
 
 interface CartItem {
@@ -33,17 +34,19 @@ export default function Home() {
       .catch((err) => console.error('Failed to load cart API', err));
   }, []);
 
-  const handleAddToCart = async () => {
+  const handleAddToCart = async (product?: { id: string; name: string; price: number; image: string }) => {
+    const itemToAdd = product || {
+      id: 'arcure-cobalt-serum',
+      name: 'ARCURE Cobalt Serum',
+      price: 78.0,
+      image: '/images/cobalt_serum.jpg',
+    };
+
     try {
       const res = await fetch('/api/cart', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          id: 'arcure-cobalt-serum',
-          name: 'ARCURE Cobalt Serum',
-          price: 78.0,
-          image: '/images/cobalt_serum.jpg',
-        }),
+        body: JSON.stringify(itemToAdd),
       });
       const data = await res.json();
       if (data.success) {
@@ -80,10 +83,13 @@ export default function Home() {
   return (
     <main className="relative min-h-screen bg-[#f8fafc] text-[#0f2038] overflow-hidden">
       {/* Navigation Header */}
-      <Navbar onShopClick={handleAddToCart} />
+      <Navbar onShopClick={() => handleAddToCart()} />
 
       {/* Hero Section Container */}
-      <HeroSection onShopNow={handleAddToCart} />
+      <HeroSection onShopNow={() => handleAddToCart()} />
+
+      {/* Featured Collection Section */}
+      <FeaturedCollection onAddToCart={handleAddToCart} />
 
       {/* Quick Cart Slide-Over Drawer */}
       <QuickCartDrawer
