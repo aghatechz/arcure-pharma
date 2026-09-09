@@ -4,7 +4,10 @@ import React, { useState, useEffect } from 'react';
 import { Navbar } from '@/components/Navbar';
 import { HeroSection } from '@/components/HeroSection';
 import { FeaturedCollection } from '@/components/FeaturedCollection';
+import { Testimonials } from '@/components/Testimonials';
+import { Footer } from '@/components/Footer';
 import { QuickCartDrawer } from '@/components/QuickCartDrawer';
+import { WhatsAppButton } from '@/components/WhatsAppButton';
 
 interface CartItem {
   id: string;
@@ -81,15 +84,25 @@ export default function Home() {
   };
 
   return (
-    <main className="relative min-h-screen bg-[#f8fafc] text-[#0f2038] overflow-hidden">
+    <main className="relative min-h-screen bg-white text-[#0f2038] overflow-hidden">
       {/* Navigation Header */}
-      <Navbar onShopClick={() => handleAddToCart()} />
+      <Navbar
+        cartCount={cartCount}
+        onShopClick={() => handleAddToCart()}
+        onOpenCart={() => setIsCartOpen(true)}
+      />
 
       {/* Hero Section Container */}
       <HeroSection onShopNow={() => handleAddToCart()} />
 
       {/* Featured Collection Section */}
       <FeaturedCollection onAddToCart={handleAddToCart} />
+
+      {/* Customer Testimonials Section */}
+      <Testimonials />
+
+      {/* Footer */}
+      <Footer />
 
       {/* Quick Cart Slide-Over Drawer */}
       <QuickCartDrawer
@@ -99,6 +112,8 @@ export default function Home() {
         totalAmount={totalAmount}
         onUpdateQuantity={handleUpdateQuantity}
       />
+      {/* Floating WhatsApp Quick Action Button */}
+      <WhatsAppButton />
     </main>
   );
 }

@@ -1,8 +1,9 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
+import { Heart, ShoppingBag } from 'lucide-react';
 
 interface ProductItem {
   id: string;
@@ -15,18 +16,26 @@ interface ProductItem {
 
 interface FeaturedCollectionProps {
   onAddToCart: (product: ProductItem) => void;
+  onBuyNow?: (product: ProductItem) => void;
 }
 
 export const FeaturedCollection: React.FC<FeaturedCollectionProps> = ({
   onAddToCart,
+  onBuyNow,
 }) => {
+  const [wishlist, setWishlist] = useState<Record<string, boolean>>({});
+
+  const toggleWishlist = (id: string) => {
+    setWishlist((prev) => ({ ...prev, [id]: !prev[id] }));
+  };
+
   const topProducts: ProductItem[] = [
     {
       id: 'rejuvenate-serum',
       name: 'Rejuvenate Serum',
       description:
         'fast-absorbing serum enriched with hyaluronic acid and marine collagen.',
-      price: 75,
+      price: 1000,
       image: '/products/product1.jpg',
     },
     {
@@ -34,7 +43,7 @@ export const FeaturedCollection: React.FC<FeaturedCollectionProps> = ({
       name: 'Clean Radiance Gel',
       description:
         'oil-free gel that instantly cools and hydrates the skin.',
-      price: 50,
+      price: 1200,
       image: '/products/product2.jpg',
     },
     {
@@ -42,7 +51,7 @@ export const FeaturedCollection: React.FC<FeaturedCollectionProps> = ({
       name: 'Night Cream',
       description:
         'repair, restore, and deeply moisturize for a softer, brighter complexion.',
-      price: 55,
+      price: 2500,
       image: '/products/product3.jpg',
       hasSparkle: true,
     },
@@ -52,25 +61,25 @@ export const FeaturedCollection: React.FC<FeaturedCollectionProps> = ({
     {
       id: 'day-cream',
       name: 'Day Cream',
-      price: 40,
+      price: 500,
       image: '/products/product4.jpg',
     },
     {
       id: 'foaming-cleanser',
       name: 'Foaming Cleanser',
-      price: 65,
+      price: 850,
       image: '/products/product5.jpg',
     },
     {
       id: 'revitalizing-toner',
       name: 'Revitalizing Toner',
-      price: 60,
+      price: 1500,
       image: '/products/product6.jpg',
     },
     {
       id: 'radiance-serum',
       name: 'Radiance Serum',
-      price: 80,
+      price: 2000,
       image: '/products/product1.jpg',
     },
   ];
@@ -111,7 +120,7 @@ export const FeaturedCollection: React.FC<FeaturedCollectionProps> = ({
 
 
         {/* TOP ROW: 3 Featured Large Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-5 sm:gap-6 mb-8">
           {topProducts.map((product, index) => (
             <motion.div
               key={product.id}
@@ -119,44 +128,82 @@ export const FeaturedCollection: React.FC<FeaturedCollectionProps> = ({
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6, delay: index * 0.15 }}
-              onClick={() => onAddToCart(product)}
-              className="group bg-white/70 backdrop-blur-md rounded-3xl p-6 border border-blue-900/5 shadow-lg hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 cursor-pointer flex flex-col justify-between"
+              className="group bg-white rounded-t-[65px] sm:rounded-t-[80px] rounded-b-2xl border border-slate-200/80 shadow-md hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between overflow-hidden"
             >
-              {/* Product Image inside Soft Circular Backdrop */}
-              <div className="relative w-full aspect-square rounded-2xl bg-gradient-to-b from-[#e8f1fc]/80 to-[#dbe8fa]/50 flex items-center justify-center mb-6 overflow-hidden">
+              {/* Arched Dome Top Image Banner */}
+              <div className="relative w-full aspect-[4/5] bg-white flex items-center justify-center p-4 sm:p-5 overflow-hidden">
                 
-                {/* Inner Light Circle */}
-                <div className="w-48 h-48 sm:w-56 sm:h-56 rounded-full bg-blue-100/50 flex items-center justify-center p-4 relative">
-                  <div className="relative w-full h-full">
-                    <Image
-                      src={product.image}
-                      alt={product.name}
-                      fill
-                      className="object-contain filter drop-shadow-lg group-hover:scale-105 transition-transform duration-500"
-                    />
-                  </div>
+                {/* Golden Amber Heart Wishlist Button */}
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    toggleWishlist(product.id);
+                  }}
+                  aria-label="Add to Wishlist"
+                  className={`absolute top-3.5 right-3.5 z-10 w-8 h-8 sm:w-9 sm:h-9 rounded-full flex items-center justify-center transition-all duration-200 shadow-md ${
+                    wishlist[product.id]
+                      ? 'bg-rose-500 text-white scale-110'
+                      : 'bg-[#0f2038] hover:bg-[#1a355c] text-white'
+                  }`}
+                >
+                  <Heart className={`w-4 h-4 ${wishlist[product.id] ? 'fill-white' : ''}`} />
+                </button>
+
+                <div className="relative w-full h-full">
+                  <Image
+                    src={product.image}
+                    alt={product.name}
+                    fill
+                    className="object-contain group-hover:scale-105 transition-transform duration-500"
+                  />
                 </div>
 
                 {/* Optional Sparkle Accent */}
                 {product.hasSparkle && (
-                  <div className="absolute top-6 right-6 text-white text-xl animate-pulse">
+                  <div className="absolute top-3.5 left-3.5 text-amber-500 text-base animate-pulse">
                     ✦
                   </div>
                 )}
               </div>
 
-              {/* Text Info */}
-              <div>
-                <h3 className="text-xl sm:text-2xl font-serif-display italic font-normal text-[#0f2038] mb-2">
+              {/* Card Content */}
+              <div className="p-4 sm:p-5 pt-1 flex flex-col items-center text-center">
+                <h3 className="text-lg sm:text-xl font-serif-display italic font-normal text-[#0f2038] mb-0.5">
                   {product.name}
                 </h3>
+
+                {/* Price Badge Pill Over Divider Line */}
+                <div className="w-full relative flex items-center justify-center my-2.5">
+                  <div className="absolute inset-0 flex items-center">
+                    <div className="w-full border-t border-slate-200" />
+                  </div>
+                  <span className="relative bg-[#0f2038] text-white text-[11px] font-bold px-3.5 py-1 rounded-full shadow-xs tracking-wide font-sans">
+                    PKR {product.price.toLocaleString()}
+                  </span>
+                </div>
+
                 {product.description && (
-                  <p className="text-xs sm:text-sm text-[#475569] font-normal leading-relaxed lowercase mb-4 line-clamp-2">
+                  <p className="text-xs text-slate-500 font-normal leading-relaxed lowercase mb-3 line-clamp-2 px-1">
                     {product.description}
                   </p>
                 )}
-                <div className="text-xl font-medium text-[#0f2038] font-sans">
-                  ${product.price}
+
+                {/* Action Buttons: Add to Cart & Buy Now */}
+                <div className="w-full flex items-center gap-2 pt-1.5">
+                  <button
+                    onClick={() => onAddToCart(product)}
+                    className="flex-1 py-2 px-2.5 rounded-lg border border-[#0f2038] text-[#0f2038] hover:bg-[#0f2038] hover:text-white font-semibold text-[11px] transition-all duration-200 flex items-center justify-center gap-1 active:scale-95"
+                  >
+                    <ShoppingBag className="w-3 h-3" />
+                    <span>Add to Cart</span>
+                  </button>
+
+                  <button
+                    onClick={() => (onBuyNow ? onBuyNow(product) : onAddToCart(product))}
+                    className="flex-1 py-2 px-2.5 rounded-lg bg-[#0f2038] hover:bg-[#1a355c] text-white font-semibold text-[11px] shadow-xs transition-all duration-200 flex items-center justify-center gap-1 active:scale-95"
+                  >
+                    <span>Buy Now</span>
+                  </button>
                 </div>
               </div>
             </motion.div>
@@ -165,7 +212,7 @@ export const FeaturedCollection: React.FC<FeaturedCollectionProps> = ({
 
 
         {/* BOTTOM ROW: 4 Compact Cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8 mb-12">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 sm:gap-6 mb-10">
           {bottomProducts.map((product, index) => (
             <motion.div
               key={product.id}
@@ -173,30 +220,69 @@ export const FeaturedCollection: React.FC<FeaturedCollectionProps> = ({
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6, delay: 0.3 + index * 0.1 }}
-              onClick={() => onAddToCart(product)}
-              className="group bg-white/70 backdrop-blur-md rounded-3xl p-5 border border-blue-900/5 shadow-lg hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 cursor-pointer flex flex-col justify-between"
+              className="group bg-white rounded-t-[55px] sm:rounded-t-[65px] rounded-b-2xl border border-slate-200/80 shadow-md hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between overflow-hidden"
             >
-              {/* Product Image inside Soft Circular Backdrop */}
-              <div className="relative w-full aspect-square rounded-2xl bg-gradient-to-b from-[#e8f1fc]/80 to-[#dbe8fa]/50 flex items-center justify-center mb-5 overflow-hidden">
-                <div className="w-36 h-36 sm:w-44 sm:h-44 rounded-full bg-blue-100/50 flex items-center justify-center p-3 relative">
-                  <div className="relative w-full h-full">
-                    <Image
-                      src={product.image}
-                      alt={product.name}
-                      fill
-                      className="object-contain filter drop-shadow-md group-hover:scale-105 transition-transform duration-500"
-                    />
-                  </div>
+              {/* Arched Dome Top Image Banner */}
+              <div className="relative w-full aspect-[4/5] bg-white flex items-center justify-center p-3.5 overflow-hidden">
+                
+                {/* Heart Wishlist Button */}
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    toggleWishlist(product.id);
+                  }}
+                  aria-label="Add to Wishlist"
+                  className={`absolute top-3 right-3 z-10 w-7.5 h-7.5 rounded-full flex items-center justify-center transition-all duration-200 shadow-sm ${
+                    wishlist[product.id]
+                      ? 'bg-rose-500 text-white scale-110'
+                      : 'bg-[#0f2038] hover:bg-[#1a355c] text-white'
+                  }`}
+                >
+                  <Heart className={`w-3.5 h-3.5 ${wishlist[product.id] ? 'fill-white' : ''}`} />
+                </button>
+
+                <div className="relative w-full h-full">
+                  <Image
+                    src={product.image}
+                    alt={product.name}
+                    fill
+                    className="object-contain group-hover:scale-105 transition-transform duration-500"
+                  />
                 </div>
               </div>
 
-              {/* Text Info */}
-              <div>
-                <h4 className="text-lg font-serif-display italic font-normal text-[#0f2038] mb-1">
+              {/* Card Content */}
+              <div className="p-3.5 sm:p-4 pt-0.5 flex flex-col items-center text-center">
+                <h4 className="text-base font-serif-display italic font-normal text-[#0f2038] mb-0.5">
                   {product.name}
                 </h4>
-                <div className="text-lg font-medium text-[#0f2038] font-sans">
-                  ${product.price}
+
+                {/* Price Badge Pill Over Divider Line */}
+                <div className="w-full relative flex items-center justify-center my-2">
+                  <div className="absolute inset-0 flex items-center">
+                    <div className="w-full border-t border-slate-200" />
+                  </div>
+                  <span className="relative bg-[#0f2038] text-white text-[10px] font-bold px-2.5 py-0.5 rounded-full shadow-xs tracking-wide font-sans">
+                    PKR {product.price.toLocaleString()}
+                  </span>
+                </div>
+
+                {/* Action Buttons: Add to Cart & Buy Now */}
+                <div className="w-full flex items-center gap-1.5 pt-1.5">
+                  <button
+                    onClick={() => onAddToCart(product)}
+                    className="flex-1 py-1.5 px-1.5 rounded-md border border-[#0f2038] text-[#0f2038] hover:bg-[#0f2038] hover:text-white font-semibold text-[10px] transition-all duration-200 flex items-center justify-center gap-1 active:scale-95"
+                  >
+                    <ShoppingBag className="w-2.5 h-2.5" />
+                    <span>Add</span>
+                  </button>
+
+                  <button
+                    onClick={() => (onBuyNow ? onBuyNow(product) : onAddToCart(product))}
+                    className="flex-1 py-1.5 px-1.5 rounded-md bg-[#0f2038] hover:bg-[#1a355c] text-white font-semibold text-[10px] shadow-xs transition-all duration-200 flex items-center justify-center gap-1 active:scale-95"
+                  >
+                    <span>Buy Now</span>
+                  </button>
                 </div>
               </div>
             </motion.div>
@@ -220,3 +306,4 @@ export const FeaturedCollection: React.FC<FeaturedCollectionProps> = ({
     </section>
   );
 };
+
