@@ -29,6 +29,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   const navCenter = [
     { label: 'Home', href: '#home' },
     { label: 'Shop', href: '#shop' },
+    { label: 'AI Assistant', href: '#ai-assistant' },
     { label: 'About', href: '#about' },
     { label: 'Blog', href: '#blog' },
     { label: 'Contact', href: '#footer' },
