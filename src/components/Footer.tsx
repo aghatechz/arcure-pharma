@@ -40,7 +40,7 @@ export const Footer: React.FC = () => {
               Stay In The Glow
             </h3>
             <p className="text-sm text-slate-400 mt-1">
-              Subscribe for exclusive offers, skincare tips & early access.
+              Subscribe for exclusive offers, skincare tips & early access..
             </p>
           </div>
           <div className="flex items-center w-full md:w-auto">
