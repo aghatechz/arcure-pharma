@@ -49,7 +49,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onShopNow }) => {
             </motion.span>
 
             <h2 className="text-[2.6rem] sm:text-[4rem] md:text-[5rem] lg:text-[6rem] font-serif-display italic font-normal text-[#1a1a2e] tracking-tight leading-none">
-              All Day
+              All Day.
             </h2>
 
             {/* Spacer to push avatars right on large screens */}
