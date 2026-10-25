@@ -47,7 +47,7 @@ export const Testimonials: React.FC = () => {
     },
     {
       id: '3',
-      name: 'Elena Rostova',
+      name: 'Elena William',
       role: 'Verified Customer • London',
       avatar: '/images/avatar3.jpg',
       rating: 5,
